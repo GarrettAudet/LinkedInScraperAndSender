@@ -1,17 +1,31 @@
-# **LinkedIn Profile Scraper**
-A Chrome extension that automates LinkedIn profile data extraction for a given user and generates a personalized connection messages using AI based on overlap between two profiles. This tool provides tailored, conversational connection messages based on professional overlap between two people. 
+# LinkedIn Profile Scraper
 
-## **🚀 Features**
-- **LinkedIn Profile Scraping**: Extracts details such as:
-  - Name  
-  - Headline  
-  - About Section  
-  - Work Experience  
-- **AI-Powered Message Generation**: Uses Google Gemini AI API to generate custom connection messages based on the extracted profile data.  
+An experimental Manifest V3 Chrome extension that reads visible LinkedIn profile fields and uses Google Gemini to draft a personalized connection message.
 
-## **🛠️ Tech Stack**
-- **Chrome Extension (Manifest v3)**: Built with modern Chrome extension standards.  
-- **JavaScript**: Core logic for data scraping and message generation.  
-- **HTML/CSS**: Simple UI for interaction and testing.  
-- **Fetch API**: Sends data to the Gemini API for message creation.  
-- **Google Gemini AI API**: Generates professional, conversational LinkedIn messages.  
+## Current flow
+
+1. On a LinkedIn profile page, the content script listens for F11.
+2. After a 15-second delay, it reads the name, headline, About text, and work experience from page selectors.
+3. The background flow requests a message from the Gemini API.
+4. The generated message is displayed in an alert, with a clipboard-copy attempt.
+
+The extension generates a draft; it does not automatically send a LinkedIn connection request.
+
+## Structure
+
+- `manifest.json`: extension permissions and entry points
+- `content.js`: profile extraction and display
+- `background.js`: message routing
+- `generateMessage.js`: prompt construction and Gemini request
+- `popup.html`: popup interface
+
+## Configuration and limitations
+
+The generator imports a local `config.js` with a `geminiApiKey` property. That file is not in the repository. Do not commit a real API key. Client-side extension credentials are accessible to the local extension environment and are unsuitable for a distributed production secret.
+
+The prompt contains project-specific sender context and should be reviewed before use. Check the configured Gemini model endpoint before use. LinkedIn page selectors may change, and the F11 shortcut can conflict with browser fullscreen behavior.
+
+## Privacy and responsible use
+
+Profile fields are transmitted to Google Gemini when generation runs. Review the data and applicable service terms before use, obtain any required permission, and avoid bulk unsolicited outreach. Review every draft before sending it yourself.
+
